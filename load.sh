@@ -14,8 +14,6 @@ blogpath=$1
 
 read -p "Enter project name: " projname
 
-echo -e "\nThe blog location is:" $blogpath "\nThe project name is:" $projname "\n"
-
 #check for content/projects folder, make it if necessary
 if [ -e "$blogpath/content/projects/" ]; then
   echo "$blogpath/content/projects/ exists."
@@ -40,20 +38,6 @@ tags: [\"\"]
 type: demo
 layout: demo
 ---" && cat $projname.html) > filename1 && mv filename1 $projname.html
-
-#get lines to be modified
-grep .css $projname.html | awk '{print $3}'
-result=$(grep -e '.js' $projname.html)
-echo $result
-echo -e "\n"
-IFS='"'
-read -ra TEMP <<< "$(grep -e '.js' $projname.html)"
-for i in "${TEMP[@]}"; do
-  if [[ $i == *".js"* ]]; then
-    echo $i
-  fi
-done
-IFS=' '
 
 #check for demo layout
 if [ -e "$blogpath/layouts/demo/" ]; then
