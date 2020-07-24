@@ -53,7 +53,7 @@ cd $cwd
 mkdir -p -v $blogpath/static/demos/$projname/
 
 #doesn't copy .git folder
-cp * $blogpath/static/demos/$projname/
+cp -v * $blogpath/static/demos/$projname/
 
 #go to new folder and remove readme
 cd $blogpath/static/demos/$projname/
