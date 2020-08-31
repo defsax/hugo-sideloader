@@ -1,16 +1,40 @@
 #!/bin/bash
+input="n"
 
-#save current dir for later
-cwd=$(pwd)
+while [ "$input" == "n" ] || [ "$input" == "N" ]
+do
 
-if [ -z $1 ]; then
-  echo "Please enter the blog base directory location. Terminating script..."
-  exit
-else
-  echo "The location you entered was:" $1
-fi
+  #get blog location
+  read -p "Enter Hugo blog base directory: " blogpath
+  until [ -e $blogpath ];
+  do
+    echo "$blogpath doesn't exist. Please enter Hugo blog base directory: "
+    read blogpath
+  done
 
-blogpath=$1
+  #get project to import location
+  read -p "Enter project directory: " projpath
+  until [ -e $projpath ];
+  do
+    echo "$projpath doesn't exist. Please enter project directory: "
+    read projpath
+  done
+
+  #confirm directories
+  until [ "$input" == "y" ] || [ "$input" == "Y"] 
+  do
+    echo -e "\nBlog location: $blogpath"
+    echo "Project to side load: $projpath"
+    read -p "Is this correct? [Yes/No/eXit] " input
+
+    case "$input" in
+      y|Y ) echo "yes";;
+      n|N ) echo "no" && break;;
+      x|X ) echo "Exiting..." && exit;;
+      * ) echo "invalid";;
+    esac
+  done
+done
 
 read -p "Enter project name: " projname
 
@@ -23,10 +47,7 @@ else
 fi
 
 #copy entry .html file into projects folder, renaming it
-cp -v *.html $blogpath/content/projects/$projname.html
-
-#go to the folder
-cd $blogpath/content/projects/
+cp -v $projpath/*.html $blogpath/content/projects/$projname.html
 
 #add front matter
 (echo "---
@@ -37,7 +58,7 @@ author: \"\"
 tags: [\"\"]
 type: demo
 layout: demo
----" && cat $projname.html) > filename1 && mv filename1 $projname.html
+---" && cat $blogpath/content/projects/$projname.html) > filename1 && mv filename1 $blogpath/content/projects/$projname.html
 
 #check for demo layout
 if [ -e "$blogpath/layouts/demo/" ]; then
@@ -49,13 +70,13 @@ else
 fi
 
 #copy all the rest of the files to static directory
-cd $cwd
 mkdir -p -v $blogpath/static/demos/$projname/
 
 #doesn't copy .git folder
-cp -v * $blogpath/static/demos/$projname/
+cp $projpath/* $blogpath/static/demos/$projname/
 
 #go to new folder and remove readme
 cd $blogpath/static/demos/$projname/
 rm -rf README.md
 rm -rf load.sh
+rm -rf index.html
