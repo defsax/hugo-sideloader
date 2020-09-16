@@ -21,7 +21,7 @@ do
   done
 
   #confirm directories
-  until [ "$input" == "y" ] || [ "$input" == "Y"] 
+  until [ "$input" == "y" ] || [ "$input" == "Y" ] 
   do
     echo -e "\nBlog location: $blogpath"
     echo "Project to side load: $projpath"
