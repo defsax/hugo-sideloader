@@ -20,3 +20,4 @@ What It Does:
 
 What It Doesn't Do (Yet):
 - replaces link paths in .html with new correct paths relative to hugo folder structure
+- check if pre-existing .html project file already has front matter. if it does, don't overwrite
